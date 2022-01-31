@@ -244,7 +244,7 @@ export class DaterangepickerComponent implements OnInit {
         }
 
     }
-    renderTimePicker(side: SideEnum) {        
+    renderTimePicker(side: SideEnum) {
         let selected, minDate;
         const maxDate = this.maxDate;
         if (side === SideEnum.left) {
@@ -299,7 +299,7 @@ export class DaterangepickerComponent implements OnInit {
                 this.timepickerVariables[side].disabledHours.push(i);
             }
         }
-        
+
         // generate minutes
         for (let i = 0; i < 60; i += this.timePickerIncrement) {
             const padded = i < 10 ? '0' + i : i;
@@ -785,7 +785,7 @@ export class DaterangepickerComponent implements OnInit {
                 this.setEndDate(start.clone());
             } else if(!this.endDate && this.timePicker){
                 const startClone = this._getDateWithTime(start, SideEnum.right);
-                
+
                 if(startClone.isBefore(start)){
                     this.timepickerVariables[SideEnum.right].selectedHour = hour;
                     this.timepickerVariables[SideEnum.right].selectedMinute = minute;
@@ -983,6 +983,7 @@ export class DaterangepickerComponent implements OnInit {
     clickRange(e, label) {
         this.chosenRange = label;
         if (label === this.locale.customRangeLabel) {
+            this.clear();
             this.isShown  = true; // show calendars
             this.showCalInRanges = true;
             this.rangeClicked.emit({label: label});
