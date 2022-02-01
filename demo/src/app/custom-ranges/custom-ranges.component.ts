@@ -78,4 +78,9 @@ export class CustomRangesComponent implements OnInit {
   choosedDateTime(e) {
     this.inlineDateTime = e;
   }
+
+  incompleteEdit(dates: Object) {
+    console.log("incomplete");
+    console.log(dates)
+  }
 }

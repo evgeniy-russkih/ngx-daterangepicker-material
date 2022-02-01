@@ -50,6 +50,8 @@ export class DaterangepickerComponent implements OnInit {
   endDate = moment().endOf('day');
 
   @Input()
+  hideRangesOnCalendarOpen = false;
+  @Input()
   customRangeStartDate = null;
   @Input()
   customRangeEndDate = null;
@@ -159,7 +161,9 @@ export class DaterangepickerComponent implements OnInit {
   @Output() datesUpdated: EventEmitter<Object>;
   @Output() startDateChanged: EventEmitter<Object>;
   @Output() endDateChanged: EventEmitter<Object>;
+  @Output() incompleteEdit: EventEmitter<Object>;
   @ViewChild('pickerContainer', { static: true }) pickerContainer: ElementRef;
+  isRangeHidden: boolean = false;
 
   constructor(
     private el: ElementRef,
@@ -171,6 +175,7 @@ export class DaterangepickerComponent implements OnInit {
     this.datesUpdated = new EventEmitter();
     this.startDateChanged = new EventEmitter();
     this.endDateChanged = new EventEmitter();
+    this.incompleteEdit = new EventEmitter();
   }
 
   ngOnInit() {
@@ -720,7 +725,7 @@ export class DaterangepickerComponent implements OnInit {
           this.chosenRange = null;
         }
         // if custom label: show calendar
-         this.showCalInRanges = !this.isCustomRangeSet();
+        this.showCalInRanges = !this.isCustomRangeSet();
       }
     }
 
@@ -735,10 +740,9 @@ export class DaterangepickerComponent implements OnInit {
     return `${this.customRangeStartDate?.format(this.locale.format)} - ${this.customRangeEndDate?.format(this.locale.format)}`;
   }
 
-  clickApply(e?) {
+  apply() {
     if (!this.singleDatePicker && this.startDate && !this.endDate) {
       this.endDate = this._getDateWithTime(this.startDate, SideEnum.right);
-
       this.calculateChosenLabel();
     }
     if (this.isInvalidDate && this.startDate && this.endDate) {
@@ -763,6 +767,10 @@ export class DaterangepickerComponent implements OnInit {
     }
 
     this.datesUpdated.emit({ startDate: this.startDate, endDate: this.endDate });
+  }
+
+  clickApply(e?) {
+    this.apply();
     if (e || (this.closeOnAutoApply && !e)) {
       this.hide();
     }
@@ -1032,11 +1040,13 @@ export class DaterangepickerComponent implements OnInit {
    */
   clickRange(e, label) {
     this.chosenRange = label;
-    console.log('range clicked');
     if (label === this.locale.customRangeLabel) {
       this.startDate = this.customRangeStartDate;
       this.endDate = this.customRangeEndDate;
       if (!this.isCustomRangeSet()) {
+        if (this.hideRangesOnCalendarOpen) {
+          this.isRangeHidden = true;
+        }
         this.showCalInRanges = true;
       } else {
         this.showCalInRanges = false;
@@ -1100,11 +1110,17 @@ export class DaterangepickerComponent implements OnInit {
     }
     this._old.start = this.startDate.clone();
     this._old.end = this.endDate.clone();
+    this.isRangeHidden = false;
     this.isShown = true;
     this.updateView();
   }
 
   hide(e?) {
+
+    if (!this.alwaysShowCalendars) {
+      this.showCalInRanges = false;
+    }
+    this.isRangeHidden = false;
     if (!this.isShown) {
       return;
     }
@@ -1116,18 +1132,19 @@ export class DaterangepickerComponent implements OnInit {
       if (this._old.end) {
         this.endDate = this._old.end.clone();
       }
+      this.incompleteEdit.emit({ startDate: this.startDate, endDate: this.endDate });
+
     }
 
     // if a new date range was selected, invoke the user callback function
-    if (!this.startDate.isSame(this._old.start) || !this.endDate.isSame(this._old.end)) {
-      // this.callback(this.startDate, this.endDate, this.chosenLabel);
-    }
+    // if (!this.startDate.isSame(this._old.start) || !this.endDate.isSame(this._old.end)) {
+    //   // this.callback(this.startDate, this.endDate, this.chosenLabel);
+    // }
 
     // if picker is attached to a text input, update it
     this.updateElement();
     this.isShown = false;
     this._ref.detectChanges();
-
   }
 
   /**
@@ -1362,9 +1379,24 @@ export class DaterangepickerComponent implements OnInit {
 
   calendarIconClicked(event) {
     event.stopPropagation();
+
     this.startDate = this.customRangeStartDate;
     this.endDate = this.customRangeEndDate;
+
+    this.updateCalendars();
+    this._ref.detectChanges();
+
+    if (this.hideRangesOnCalendarOpen) {
+      this.isRangeHidden = true;
+    }
+
     this.chosenRange = this.locale.customRangeLabel;
     this.showCalInRanges = !this.showCalInRanges;
+
+    this.apply();
+    this.updateElement();
+    this._ref.detectChanges();
+
+    this.rangeClicked.emit({ label: this.locale.customRangeLabel });
   }
 }

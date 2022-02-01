@@ -49,11 +49,13 @@ export class DaterangepickerDirective implements OnInit, OnChanges, DoCheck {
   private _value: any;
   private localeDiffer: KeyValueDiffer<string, any>;
   @Input()
-  minDate: _moment.Moment
+  minDate: _moment.Moment;
   @Input()
-  maxDate: _moment.Moment
+  maxDate: _moment.Moment;
   @Input()
   autoApply: boolean;
+  @Input()
+  hideRangesOnCalendarOpen = false;
   @Input()
   alwaysShowCalendars: boolean;
   @Input()
@@ -156,6 +158,7 @@ export class DaterangepickerDirective implements OnInit, OnChanges, DoCheck {
   @Output('change') onChange: EventEmitter<Object> = new EventEmitter();
   @Output('rangeClicked') rangeClicked: EventEmitter<Object> = new EventEmitter();
   @Output('datesUpdated') datesUpdated: EventEmitter<Object> = new EventEmitter();
+  @Output('incompleteEdit') incompleteEdit: EventEmitter<Object> = new EventEmitter();
   @Output() startDateChanged: EventEmitter<Object> = new EventEmitter();
   @Output() endDateChanged: EventEmitter<Object> = new EventEmitter();
   @HostBinding('disabled') get disabled() { return this._disabled; }
@@ -190,6 +193,9 @@ export class DaterangepickerDirective implements OnInit, OnChanges, DoCheck {
     this.picker.datesUpdated.asObservable().subscribe((range: any) => {
       this.datesUpdated.emit(range);
     });
+    this.picker.incompleteEdit.asObservable().subscribe((range: any) => {
+      this.incompleteEdit.emit(range);
+    });
     this.picker.choosedDate.asObservable().subscribe((change: any) => {
       if (change) {
         const value = {};
@@ -202,6 +208,7 @@ export class DaterangepickerDirective implements OnInit, OnChanges, DoCheck {
         }
       }
     });
+    this.picker.hideRangesOnCalendarOpen = this.hideRangesOnCalendarOpen;
     this.picker.firstMonthDayClass = this.firstMonthDayClass;
     this.picker.lastMonthDayClass = this.lastMonthDayClass;
     this.picker.emptyWeekRowClass = this.emptyWeekRowClass;

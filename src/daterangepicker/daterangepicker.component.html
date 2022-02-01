@@ -8,7 +8,7 @@
     'double': !singleDatePicker && showCalInRanges,
     'show-ranges': rangesArray.length
 }" [class]="'drops-' + drops + '-' + opens">
-    <div class="ranges">
+    <div class="ranges" [hidden]='isRangeHidden'>
         <ul>
           <li *ngFor="let range of rangesArray">
             <button type="button"
@@ -22,7 +22,7 @@
             <button type="button"
                     (click)="clickRange($event, locale.customRangeLabel)"
                     [ngClass]="{'active': locale.customRangeLabel === chosenRange}">{{ this.isCustomRangeSet() ? this.getCustomRangeString() :  locale.customRangeLabel}}
-              <span (click)="calendarIconClicked($event)" class="calendar-icon"> icon here</span>
+              <span (click)="calendarIconClicked($event)" class="calendar-icon"></span>
             </button>
           </li>
         </ul>
