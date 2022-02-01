@@ -14,7 +14,16 @@
             <button type="button"
                     (click)="clickRange($event, range)"
                     [disabled]="disableRange(range)"
-                    [ngClass]="{'active': range === chosenRange}">{{range}}</button>
+                    [ngClass]="{'active': range === chosenRange}">{{range}}
+            </button>
+          </li>
+
+          <li *ngIf='showCustomRangeLabel'>
+            <button type="button"
+                    (click)="clickRange($event, locale.customRangeLabel)"
+                    [ngClass]="{'active': locale.customRangeLabel === chosenRange}">{{ this.isCustomRangeSet() ? this.getCustomRangeString() :  locale.customRangeLabel}}
+              <span (click)="calendarIconClicked($event)" class="calendar-icon"> icon here</span>
+            </button>
           </li>
         </ul>
     </div>

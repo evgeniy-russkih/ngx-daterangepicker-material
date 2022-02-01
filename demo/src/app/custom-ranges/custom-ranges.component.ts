@@ -59,7 +59,7 @@ export class CustomRangesComponent implements OnInit {
     this.maxDate = moment().add(2,  'weeks');
     this.minDate = moment().subtract(3, 'days');
 
-    this.alwaysShowCalendars = true;
+    this.alwaysShowCalendars = false;
     this.keepCalendarOpeningWithRange = true;
     this.showRangeLabelOnInput = true;
     this.selected = {

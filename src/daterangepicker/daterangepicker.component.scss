@@ -179,7 +179,7 @@ $input-height: 3rem !default;
     &.drops-up-center {
       transform-origin: 50%% 100%;
     }
-    
+
     .calendar {
       display: none;
     }
@@ -213,6 +213,8 @@ $input-height: 3rem !default;
     border-radius: $md-drppicker-calendar-border-radius;
     background-color: $md-drppicker-calendar-bg-color;
   }
+
+
 
   table {
     width: 100%;
@@ -371,7 +373,7 @@ $input-height: 3rem !default;
         margin: 0;
         cursor: default;
       }
-      &.hourselect, 
+      &.hourselect,
       &.minuteselect,
       &.secondselect,
       &.ampmselect {
@@ -388,9 +390,9 @@ $input-height: 3rem !default;
       &.yearselect {
         cursor: pointer;
         opacity: 0;
-        position: absolute; 
-        top: 0; 
-        left: 0; 
+        position: absolute;
+        top: 0;
+        left: 0;
         margin: 0;
         padding: 0;
       }
@@ -398,7 +400,7 @@ $input-height: 3rem !default;
   }
 
   th.month > div {
-    position: relative; 
+    position: relative;
     display: inline-block;
   }
 
@@ -451,7 +453,7 @@ $input-height: 3rem !default;
       }
     }
   }
-  
+
   .calendar-time select.disabled {
     color: #ccc;
     cursor: not-allowed;
@@ -543,7 +545,7 @@ $input-height: 3rem !default;
       margin-top: 8px;
     }
   }
-    
+
   [hidden] {
     display: none;
   }

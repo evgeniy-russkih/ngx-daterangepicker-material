@@ -91,6 +91,7 @@ constructor() {{ '{' }}
   <div class="col s12">
     <h3>Inline daterangepicker</h3>
     <ngx-daterangepicker-material (datesUpdated)="choosedDateTime($event)"
+                                  [timePicker]="true"
                                   [autoApply]="true"
                                   [showCustomRangeLabel]="true"
                                   [alwaysShowCalendars]="alwaysShowCalendars"
