@@ -50,6 +50,8 @@ export class DaterangepickerComponent implements OnInit {
   endDate = moment().endOf('day');
 
   @Input()
+  singleCalendar = false;
+  @Input()
   hideRangesOnCalendarOpen = false;
   @Input()
   customRangeStartDate = null;
@@ -925,6 +927,7 @@ export class DaterangepickerComponent implements OnInit {
       this.rightCalendar.month.subtract(1, 'month');
     }
     this.updateCalendars();
+    this.showCalInRanges = true;
   }
 
   /**
@@ -941,6 +944,7 @@ export class DaterangepickerComponent implements OnInit {
       }
     }
     this.updateCalendars();
+    this.showCalInRanges = true;
   }
 
   /**
@@ -987,8 +991,16 @@ export class DaterangepickerComponent implements OnInit {
 
     let date = side === SideEnum.left ? this.leftCalendar.calendar[row][col] : this.rightCalendar.calendar[row][col];
 
-    if ((this.endDate || (date.isBefore(this.startDate, 'day')
-      && this.customRangeDirection === false)) && this.lockStartDate === false) { // picking start
+    if (this.startDate == null && this.endDate == null) {
+      if (this.customRangeDirection === false) {
+        if (this.timePicker) {
+          date = this._getDateWithTime(date, SideEnum.left);
+        }
+        this.endDate = null;
+        this.setStartDate(date.clone());
+      }
+    } else if ((this.endDate ||
+      (date.isBefore(this.startDate, 'day') && this.customRangeDirection === false)) && this.lockStartDate === false) { // picking start
       if (this.timePicker) {
         date = this._getDateWithTime(date, SideEnum.left);
       }
@@ -1108,15 +1120,14 @@ export class DaterangepickerComponent implements OnInit {
     if (this.isShown) {
       return;
     }
-    this._old.start = this.startDate.clone();
-    this._old.end = this.endDate.clone();
+    this._old.start = this.startDate?.clone();
+    this._old.end = this.endDate?.clone();
     this.isRangeHidden = false;
     this.isShown = true;
     this.updateView();
   }
 
   hide(e?) {
-
     if (!this.alwaysShowCalendars) {
       this.showCalInRanges = false;
     }
@@ -1142,6 +1153,7 @@ export class DaterangepickerComponent implements OnInit {
     // }
 
     // if picker is attached to a text input, update it
+
     this.updateElement();
     this.isShown = false;
     this._ref.detectChanges();
@@ -1379,6 +1391,10 @@ export class DaterangepickerComponent implements OnInit {
 
   calendarIconClicked(event) {
     event.stopPropagation();
+
+    if (!this.isCustomRangeSet()) {
+      this.leftCalendar.month = moment();
+    }
 
     this.startDate = this.customRangeStartDate;
     this.endDate = this.customRangeEndDate;

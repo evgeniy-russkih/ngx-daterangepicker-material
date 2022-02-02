@@ -57,6 +57,8 @@ export class DaterangepickerDirective implements OnInit, OnChanges, DoCheck {
   @Input()
   hideRangesOnCalendarOpen = false;
   @Input()
+  singleCalendar = false;
+  @Input()
   alwaysShowCalendars: boolean;
   @Input()
   showCustomRangeLabel: boolean;
@@ -208,6 +210,7 @@ export class DaterangepickerDirective implements OnInit, OnChanges, DoCheck {
         }
       }
     });
+    this.picker.singleCalendar = this.singleCalendar;
     this.picker.hideRangesOnCalendarOpen = this.hideRangesOnCalendarOpen;
     this.picker.firstMonthDayClass = this.firstMonthDayClass;
     this.picker.lastMonthDayClass = this.lastMonthDayClass;
